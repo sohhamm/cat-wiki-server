@@ -8,4 +8,6 @@ const express_1 = __importDefault(require("express"));
 const cat_controller_1 = require("../controllers/cat.controller");
 const router = express_1.default.Router();
 exports.router = router;
-router.route("/breeds").get(cat_controller_1.getAllBreeds);
+router.route("/cats").get(cat_controller_1.getAllBreeds);
+router.route("/cats/search").get(cat_controller_1.getSearchedBreeds);
+router.route("/cats/:id").get(cat_controller_1.getBreedByID);

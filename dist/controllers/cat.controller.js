@@ -9,10 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAllBreeds = void 0;
+exports.getBreedByID = exports.getSearchedBreeds = exports.getAllBreeds = void 0;
 const fetch_1 = require("../utils/fetch");
 const getAllBreeds = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield (0, fetch_1.fetcher)("/breeds");
     return res.json(data);
 });
 exports.getAllBreeds = getAllBreeds;
+const getSearchedBreeds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const query = req.query.q || "";
+    const data = yield (0, fetch_1.fetcher)(`/breeds/search?q=${query}`);
+    return res.json(data);
+});
+exports.getSearchedBreeds = getSearchedBreeds;
+const getBreedByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const data = yield (0, fetch_1.fetcher)(`/images/search?breed_ids=${id}`);
+    return res.json(data);
+});
+exports.getBreedByID = getBreedByID;

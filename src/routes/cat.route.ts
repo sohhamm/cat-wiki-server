@@ -1,8 +1,14 @@
 import express from "express";
-import { getAllBreeds } from "../controllers/cat.controller";
+import {
+  getAllBreeds,
+  getBreedByID,
+  getSearchedBreeds,
+} from "../controllers/cat.controller";
 
 const router = express.Router();
 
-router.route("/breeds").get(getAllBreeds);
+router.route("/cats").get(getAllBreeds);
+router.route("/cats/search").get(getSearchedBreeds);
+router.route("/cats/:id").get(getBreedByID);
 
 export { router };
