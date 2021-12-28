@@ -1,11 +1,19 @@
-import fetch from "node-fetch";
+const _importDynamic = new Function("modulePath", "return import(modulePath)");
+
+async function fetch(...args: any) {
+  const { default: fetch } = await _importDynamic("node-fetch");
+  return fetch(...args);
+}
 
 const URL = `https://api.thecatapi.com/v1`;
+
 export const fetcher = async (
-  method = "get",
   endpoint: string,
-  payload: JSON
+  payload?: JSON,
+  method = "get"
 ) => {
+  const apiKey = process.env.CAT_WIKI_API_KEY!;
+
   try {
     const res = await (
       await fetch(URL + endpoint, {
@@ -13,6 +21,7 @@ export const fetcher = async (
         body: JSON.stringify(payload),
         headers: {
           "Content-Type": "application/json",
+          "x-api-key": apiKey,
         },
       })
     ).json();

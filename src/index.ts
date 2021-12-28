@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import cors from "cors";
-// import { photoRoutes } from "./routes/index";
+import { catRoutes } from "./routes/index";
 // import { connectDB } from "./db";
 dotenv.config();
 
@@ -19,7 +19,7 @@ app.get("/", (_, res) => {
   res.send("Health Check");
 });
 
-// app.use("/api/photos", photoRoutes);
+app.use("/api", catRoutes);
 
 // main function
 (async () => {

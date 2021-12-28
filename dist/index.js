@@ -16,7 +16,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
-// import { photoRoutes } from "./routes/index";
+const index_1 = require("./routes/index");
 // import { connectDB } from "./db";
 dotenv_1.default.config();
 const app = (0, express_1.default)();
@@ -29,7 +29,7 @@ app.use((0, cors_1.default)());
 app.get("/", (_, res) => {
     res.send("Health Check");
 });
-// app.use("/api/photos", photoRoutes);
+app.use("/api", index_1.catRoutes);
 // main function
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
