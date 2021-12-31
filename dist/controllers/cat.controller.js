@@ -17,13 +17,13 @@ const getAllBreeds = (_req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getAllBreeds = getAllBreeds;
 const getSearchedBreeds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const query = req.query.q || "";
-    const data = yield (0, fetch_1.fetcher)(`/breeds/search?q=${query}`);
+    const { q = "" } = req.query;
+    const data = yield (0, fetch_1.fetcher)(`/breeds/search?q=${q}`);
     return res.json(data);
 });
 exports.getSearchedBreeds = getSearchedBreeds;
 const getBreedByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
+    const { id = "" } = req.params;
     const data = yield (0, fetch_1.fetcher)(`/images/search?breed_ids=${id}`);
     return res.json(data);
 });

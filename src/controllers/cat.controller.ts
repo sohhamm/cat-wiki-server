@@ -7,13 +7,13 @@ export const getAllBreeds = async (_req: Request, res: Response) => {
 };
 
 export const getSearchedBreeds = async (req: Request, res: Response) => {
-  const query = req.query.q || "";
-  const data = await fetcher(`/breeds/search?q=${query}`);
+  const { q = "" } = req.query;
+  const data = await fetcher(`/breeds/search?q=${q}`);
   return res.json(data);
 };
 
 export const getBreedByID = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { id = "" } = req.params;
   const data = await fetcher(`/images/search?breed_ids=${id}`);
   return res.json(data);
 };
