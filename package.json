@@ -1,6 +1,6 @@
 {
   "name": "cat-wiki-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "packageManager": "yarn@3.1.1",
   "main": "dist/index.js",
@@ -12,8 +12,10 @@
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "build": "rimraf dist && tsc",
     "preserve": "npm run build",
-    "dev": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"pm2 start dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"pm2 start dist/index.js --name cat-wiki-server --watch --ignore-watch=\"node_modules\"\"",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "stop": "pm2 stop cat-wiki-server",
+    "restart": "pm2 restart cat-wiki-server"
   },
   "dependencies": {
     "@typegoose/typegoose": "^9.4.0",
