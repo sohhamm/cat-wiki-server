@@ -4,6 +4,7 @@ import helmet from "helmet";
 import cors from "cors";
 import { catRoutes } from "./routes/index";
 // import { connectDB } from "./db";
+import { notFound } from "./middleware/not-found";
 dotenv.config();
 
 const app: Express = express();
@@ -20,7 +21,7 @@ app.get("/", (_, res) => {
 });
 
 app.use("/api", catRoutes);
-
+app.use([notFound]);
 // main function
 (async () => {
   try {

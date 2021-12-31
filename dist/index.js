@@ -18,6 +18,7 @@ const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 const index_1 = require("./routes/index");
 // import { connectDB } from "./db";
+const not_found_1 = require("./middleware/not-found");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 9000;
@@ -30,6 +31,7 @@ app.get("/", (_, res) => {
     res.send("Health Check");
 });
 app.use("/api", index_1.catRoutes);
+app.use([not_found_1.notFound]);
 // main function
 (() => __awaiter(void 0, void 0, void 0, function* () {
     try {
