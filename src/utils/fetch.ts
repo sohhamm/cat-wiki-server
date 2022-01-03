@@ -9,8 +9,9 @@ const URL = `https://api.thecatapi.com/v1`;
 
 export const fetcher = async (
   endpoint: string,
-  payload?: JSON,
-  method = "get"
+  payload?: any,
+  method = "get",
+  _headers?: any
 ) => {
   const apiKey = process.env.CAT_WIKI_API_KEY!;
 
@@ -22,6 +23,7 @@ export const fetcher = async (
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
+          // ...headers,
         },
       })
     ).json();

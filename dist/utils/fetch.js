@@ -18,7 +18,7 @@ function fetch(...args) {
     });
 }
 const URL = `https://api.thecatapi.com/v1`;
-const fetcher = (endpoint, payload, method = "get") => __awaiter(void 0, void 0, void 0, function* () {
+const fetcher = (endpoint, payload, method = "get", _headers) => __awaiter(void 0, void 0, void 0, function* () {
     const apiKey = process.env.CAT_WIKI_API_KEY;
     try {
         const res = yield (yield fetch(URL + endpoint, {
@@ -27,6 +27,7 @@ const fetcher = (endpoint, payload, method = "get") => __awaiter(void 0, void 0,
             headers: {
                 "Content-Type": "application/json",
                 "x-api-key": apiKey,
+                // ...headers,
             },
         })).json();
         return res;

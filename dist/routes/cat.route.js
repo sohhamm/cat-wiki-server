@@ -10,4 +10,5 @@ const router = express_1.default.Router();
 exports.router = router;
 router.route("/cats").get(cat_controller_1.getAllBreeds);
 router.route("/cats/search").get(cat_controller_1.getSearchedBreeds);
+router.route("/cats/top-breeds").get(cat_controller_1.getTopBreeds).post(cat_controller_1.incrementSearchCount);
 router.route("/cats/:id").get(cat_controller_1.getBreedByID);
