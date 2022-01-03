@@ -1,5 +1,7 @@
 import { fetcher } from "../utils/fetch";
 import { Request, Response } from "express";
+import { Cat } from "../entities/cat";
+import { mostSearched } from "../most-searched";
 
 export const getAllBreeds = async (_req: Request, res: Response) => {
   const data = await fetcher("/breeds");
@@ -47,12 +49,28 @@ export const incrementSearchCount = async (req: Request, res: Response) => {
   return res.json(msg);
 };
 
-// export const getTopBreeds = async (req: Request, res: Response) => {
-//   const limit = Number(req.query.limit) || 10;
+export const getTopBreeds = async (req: Request, res: Response) => {
+  const limit = Number(req.query.limit) || 10;
 
-//   return res.json(
-//     mostSearched
-//       .sort((a, b) => (a.count > b.count ? -1 : 1))
-//       .slice(0, limit + 1)
-//   );
-// };
+  const top_cats = await Cat.find({});
+
+  console.log(top_cats);
+
+  return res.json(
+    top_cats.sort((a, b) => (a.count > b.count ? -1 : 1)).slice(0, limit + 1)
+  );
+};
+
+export const seedDB = async (_req: Request, res: Response) => {
+  for (let obj of mostSearched) {
+    const cat = new Cat();
+    cat.id = obj.id;
+    cat.name = obj.name;
+    cat.description = obj.description;
+    cat.count = 0;
+    cat.url = obj.image?.url || "";
+    await cat.save();
+  }
+
+  res.json({ msg: "done" });
+};
