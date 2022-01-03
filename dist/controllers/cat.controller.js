@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.seedDB = exports.getTopBreeds = exports.incrementSearchCount = exports.getBreedByID = exports.getSearchedBreeds = exports.getAllBreeds = void 0;
-const fetch_1 = require("../utils/fetch");
+const typeorm_1 = require("typeorm");
 const cat_1 = require("../entities/cat");
+const fetch_1 = require("../utils/fetch");
 const most_searched_1 = require("../most-searched");
 const getAllBreeds = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield (0, fetch_1.fetcher)("/breeds");
@@ -35,26 +36,37 @@ const getBreedByID = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.getBreedByID = getBreedByID;
 const incrementSearchCount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name } = req.body;
-    let msg = { msg: "cat not found", name: "" };
-    // console.log({ mostSearched });
-    // const mostSearched = JSON.parse(await readFile("./search.json".toString()));
-    // mostSearched.forEach((cat, idx) => {
-    //   if (cat.name.toLowerCase().includes(name.toLowerCase())) {
-    //     cat.count++;
-    //     // updateCount(idx);
-    //     msg.msg = "successfully incremented search count";
-    //     msg.name = cat.name.toLowerCase();
-    //   }
-    // });
-    return res.json(msg);
+    try {
+        const { id } = req.body;
+        const entityManager = (0, typeorm_1.getManager)();
+        const cat = yield entityManager.findOne(cat_1.Cat, id);
+        if (!cat) {
+            return res.json({ msg: "cat not found", name: "" });
+        }
+        cat.count += 1;
+        entityManager.save(cat);
+        return res.json({ msg: "success", name: cat.name, id: cat.id });
+    }
+    catch (err) {
+        return res.status(500).json({ msg: "error updating cat from database" });
+    }
 });
 exports.incrementSearchCount = incrementSearchCount;
 const getTopBreeds = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const limit = Number(req.query.limit) || 10;
-    const top_cats = yield cat_1.Cat.find({});
-    console.log(top_cats);
-    return res.json(top_cats.sort((a, b) => (a.count > b.count ? -1 : 1)).slice(0, limit + 1));
+    try {
+        const limit = Number(req.query.limit) || 10;
+        const topCats = yield cat_1.Cat.find({
+            order: {
+                count: "DESC",
+            },
+        });
+        return res.json(topCats.sort((a, b) => (a.count > b.count ? -1 : 1)).slice(0, limit + 1));
+    }
+    catch (err) {
+        return res
+            .status(500)
+            .json({ msg: "error getting cats from the database" });
+    }
 });
 exports.getTopBreeds = getTopBreeds;
 const seedDB = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {

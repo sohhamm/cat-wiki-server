@@ -1,6 +1,7 @@
-import { fetcher } from "../utils/fetch";
 import { Request, Response } from "express";
+import { getManager } from "typeorm";
 import { Cat } from "../entities/cat";
+import { fetcher } from "../utils/fetch";
 import { mostSearched } from "../most-searched";
 
 export const getAllBreeds = async (_req: Request, res: Response) => {
@@ -30,35 +31,37 @@ export const getBreedByID = async (req: Request, res: Response) => {
 };
 
 export const incrementSearchCount = async (req: Request, res: Response) => {
-  const { name } = req.body;
-
-  let msg = { msg: "cat not found", name: "" };
-  // console.log({ mostSearched });
-
-  // const mostSearched = JSON.parse(await readFile("./search.json".toString()));
-
-  // mostSearched.forEach((cat, idx) => {
-  //   if (cat.name.toLowerCase().includes(name.toLowerCase())) {
-  //     cat.count++;
-  //     // updateCount(idx);
-  //     msg.msg = "successfully incremented search count";
-  //     msg.name = cat.name.toLowerCase();
-  //   }
-  // });
-
-  return res.json(msg);
+  try {
+    const { id } = req.body;
+    const entityManager = getManager();
+    const cat = await entityManager.findOne(Cat, id);
+    if (!cat) {
+      return res.json({ msg: "cat not found", name: "" });
+    }
+    cat.count += 1;
+    entityManager.save(cat);
+    return res.json({ msg: "success", name: cat.name, id: cat.id });
+  } catch (err) {
+    return res.status(500).json({ msg: "error updating cat from database" });
+  }
 };
 
 export const getTopBreeds = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit) || 10;
-
-  const top_cats = await Cat.find({});
-
-  console.log(top_cats);
-
-  return res.json(
-    top_cats.sort((a, b) => (a.count > b.count ? -1 : 1)).slice(0, limit + 1)
-  );
+  try {
+    const limit = Number(req.query.limit) || 10;
+    const topCats = await Cat.find({
+      order: {
+        count: "DESC",
+      },
+    });
+    return res.json(
+      topCats.sort((a, b) => (a.count > b.count ? -1 : 1)).slice(0, limit + 1)
+    );
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ msg: "error getting cats from the database" });
+  }
 };
 
 export const seedDB = async (_req: Request, res: Response) => {
