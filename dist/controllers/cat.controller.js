@@ -9,9 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTopBreeds = exports.incrementSearchCount = exports.getBreedByID = exports.getSearchedBreeds = exports.getAllBreeds = void 0;
+exports.incrementSearchCount = exports.getBreedByID = exports.getSearchedBreeds = exports.getAllBreeds = void 0;
 const fetch_1 = require("../utils/fetch");
-const most_searched_1 = require("../most-searched");
 const getAllBreeds = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = yield (0, fetch_1.fetcher)("/breeds");
     return res.json(data);
@@ -35,17 +34,25 @@ const getBreedByID = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getBreedByID = getBreedByID;
 const incrementSearchCount = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name } = req.body;
-    let msg = { msg: "Cat not found" };
-    most_searched_1.mostSearched.forEach((cat) => {
-        if (cat.name.toLowerCase().includes(name.toLowerCase())) {
-            cat.count++;
-            msg.msg = "successfully incremented";
-        }
-    });
+    let msg = { msg: "cat not found", name: "" };
+    // console.log({ mostSearched });
+    // const mostSearched = JSON.parse(await readFile("./search.json".toString()));
+    // mostSearched.forEach((cat, idx) => {
+    //   if (cat.name.toLowerCase().includes(name.toLowerCase())) {
+    //     cat.count++;
+    //     // updateCount(idx);
+    //     msg.msg = "successfully incremented search count";
+    //     msg.name = cat.name.toLowerCase();
+    //   }
+    // });
     return res.json(msg);
 });
 exports.incrementSearchCount = incrementSearchCount;
-const getTopBreeds = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    return res.json(most_searched_1.mostSearched.sort((a, b) => (a.count > b.count ? -1 : 1)));
-});
-exports.getTopBreeds = getTopBreeds;
+// export const getTopBreeds = async (req: Request, res: Response) => {
+//   const limit = Number(req.query.limit) || 10;
+//   return res.json(
+//     mostSearched
+//       .sort((a, b) => (a.count > b.count ? -1 : 1))
+//       .slice(0, limit + 1)
+//   );
+// };

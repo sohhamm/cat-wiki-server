@@ -1,4 +1,4 @@
-export const mostSearched = [
+export let mostSearched = [
   {
     id: "abys",
     name: "Abyssinian",

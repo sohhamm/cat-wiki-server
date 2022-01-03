@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { Express } from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
@@ -5,6 +6,7 @@ import cors from "cors";
 import { catRoutes } from "./routes/index";
 // import { connectDB } from "./db";
 import { notFound } from "./middleware/not-found";
+import { connectDB } from "./db";
 dotenv.config();
 
 const app: Express = express();
@@ -25,8 +27,8 @@ app.use([notFound]);
 // main function
 (async () => {
   try {
-    // await connectDB();
-    // console.log("🚀 connected to the database...");
+    await connectDB();
+    console.log("🚀 connected to the database...");
     app.listen(PORT, () => {
       console.log(`🔥 server listening at http://localhost:${PORT}`);
     });

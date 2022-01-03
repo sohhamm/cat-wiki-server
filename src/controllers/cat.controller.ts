@@ -1,6 +1,5 @@
 import { fetcher } from "../utils/fetch";
 import { Request, Response } from "express";
-import { mostSearched } from "../most-searched";
 
 export const getAllBreeds = async (_req: Request, res: Response) => {
   const data = await fetcher("/breeds");
@@ -31,18 +30,29 @@ export const getBreedByID = async (req: Request, res: Response) => {
 export const incrementSearchCount = async (req: Request, res: Response) => {
   const { name } = req.body;
 
-  let msg = { msg: "Cat not found" };
+  let msg = { msg: "cat not found", name: "" };
+  // console.log({ mostSearched });
 
-  mostSearched.forEach((cat) => {
-    if (cat.name.toLowerCase().includes(name.toLowerCase())) {
-      cat.count++;
-      msg.msg = "successfully incremented";
-    }
-  });
+  // const mostSearched = JSON.parse(await readFile("./search.json".toString()));
+
+  // mostSearched.forEach((cat, idx) => {
+  //   if (cat.name.toLowerCase().includes(name.toLowerCase())) {
+  //     cat.count++;
+  //     // updateCount(idx);
+  //     msg.msg = "successfully incremented search count";
+  //     msg.name = cat.name.toLowerCase();
+  //   }
+  // });
 
   return res.json(msg);
 };
 
-export const getTopBreeds = async (_req: Request, res: Response) => {
-  return res.json(mostSearched.sort((a, b) => (a.count > b.count ? -1 : 1)));
-};
+// export const getTopBreeds = async (req: Request, res: Response) => {
+//   const limit = Number(req.query.limit) || 10;
+
+//   return res.json(
+//     mostSearched
+//       .sort((a, b) => (a.count > b.count ? -1 : 1))
+//       .slice(0, limit + 1)
+//   );
+// };
